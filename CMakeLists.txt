@@ -178,24 +178,24 @@ endif()
 
 # Build the compare utilities
 if(ENABLE_ECL_INPUT)
-  add_executable(compareECL
-    test_util/EclFilesComparator.cpp
-    test_util/EclRegressionTest.cpp
-    test_util/compareECL.cpp
-    )
+#  add_executable(compareECL
+    #test_util/EclFilesComparator.cpp
+    #test_util/EclRegressionTest.cpp
+    #test_util/compareECL.cpp
+#    )
 
-  add_executable(convertECL
-    test_util/convertECL.cpp
-    )
+ # add_executable(convertECL
+ #   test_util/convertECL.cpp
+ #   )
 
-  add_executable(summary
-    test_util/summary.cpp
-    )
+  #add_executable(summary
+  #  test_util/summary.cpp
+  #  )
 
-  foreach(target compareECL convertECL summary)
-    target_link_libraries(${target} opmcommon)
-    install(TARGETS ${target} DESTINATION bin)
-  endforeach()
+  #foreach(target compareECL convertECL summary)
+  #  target_link_libraries(${target} opmcommon)
+  #  install(TARGETS ${target} DESTINATION bin)
+  #endforeach()
 
   # Add the tests
   set(_libs opmcommon

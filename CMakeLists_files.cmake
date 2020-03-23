@@ -455,9 +455,9 @@ if(ENABLE_ECL_INPUT)
     tests/restart/MODEL2.UNRST
   )
   list (APPEND EXAMPLE_SOURCE_FILES
-    examples/opmi.cpp
-    examples/opmpack.cpp
-    examples/opmhash.cpp
+    #examples/opmi.cpp
+    #examples/opmpack.cpp
+    #examples/opmhash.cpp
   )
 endif()
 

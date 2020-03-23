@@ -21,7 +21,7 @@
 #include <iomanip>
 #include <iostream>
 #include <tuple>
-#include <getopt.h>
+//#include <getopt.h>
 #include <sstream>
 
 #include <opm/io/eclipse/ESmry.hpp>
@@ -66,6 +66,7 @@ int main(int argc, char **argv) {
     bool reportStepsOnly           = false;
     bool listKeys                  = false;
 
+/*
     while ((c = getopt(argc, argv, "hrl")) != -1) {
         switch (c) {
         case 'h':
@@ -137,6 +138,7 @@ int main(int argc, char **argv) {
         }
         std::cout << std::endl;
     }   
+*/
      
     return 0;
 }
