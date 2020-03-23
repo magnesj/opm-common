@@ -14,7 +14,7 @@ class ASTNode {
 public:
 
     ASTNode();
-    ASTNode(TokenType type_arg);
+    ASTNode(msj_TokenType type_arg);
     ASTNode(double value);
     ASTNode(TokenType type_arg, FuncType func_type_arg, const std::string& func_arg, const std::vector<std::string>& arg_list_arg);
 
@@ -22,7 +22,7 @@ public:
 
     Action::Result eval(const Action::Context& context) const;
     Action::Value value(const Action::Context& context) const;
-    TokenType type;
+    msj_TokenType type;
     FuncType func_type;
     void add_child(const ASTNode& child);
     size_t size() const;

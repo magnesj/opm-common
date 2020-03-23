@@ -32,20 +32,20 @@ namespace Action {
 
 namespace {
 
-Condition::Comparator comparator(TokenType tt) {
-    if (tt == TokenType::op_eq)
+Condition::Comparator comparator(msj_TokenType tt) {
+    if (tt == msj_TokenType::op_eq)
         return Condition::Comparator::EQUAL;
 
-    if (tt == TokenType::op_gt)
+    if (tt == msj_TokenType::op_gt)
         return Condition::Comparator::GREATER;
 
-    if (tt == TokenType::op_lt)
+    if (tt == msj_TokenType::op_lt)
         return Condition::Comparator::LESS;
 
-    if (tt == TokenType::op_le)
+    if (tt == msj_TokenType::op_le)
         return Condition::Comparator::LESS_EQUAL;
 
-    if (tt == TokenType::op_ge)
+    if (tt == msj_TokenType::op_ge)
         return Condition::Comparator::GREATER_EQUAL;
 
     return Condition::Comparator::INVALID;
@@ -115,9 +115,9 @@ Condition::Condition(const std::vector<std::string>& tokens, const Location& loc
             break;
 
         auto token_type = Parser::get_type(tokens[token_index]);
-        if (token_type == TokenType::op_and)
+        if (token_type == msj_TokenType::op_and)
             this->logic = Condition::Logical::AND;
-        else if (token_type == TokenType::op_or)
+        else if (token_type == msj_TokenType::op_or)
             this->logic = Condition::Logical::OR;
         else
             this->rhs.add_arg(tokens[token_index]);

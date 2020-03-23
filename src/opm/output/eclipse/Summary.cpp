@@ -385,6 +385,7 @@ measure rate_unit() { return measure::liquid_surface_rate; }
 template< Opm::Phase > constexpr
 measure rate_unit() { return measure::liquid_surface_rate; }
 
+/*
 template<> constexpr
 measure rate_unit< rt::gas >() { return measure::gas_surface_rate; }
 template<> constexpr
@@ -419,6 +420,7 @@ measure rate_unit< rt::well_potential_oil >() { return measure::liquid_surface_r
 
 template<> constexpr
 measure rate_unit< rt::well_potential_gas >() { return measure::gas_surface_rate; }
+*/
 
 double efac( const std::vector<std::pair<std::string,double>>& eff_factors, const std::string& name ) {
     auto it = std::find_if( eff_factors.begin(), eff_factors.end(),

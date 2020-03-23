@@ -33,7 +33,7 @@ Parser::Parser(const std::vector<std::string>& tokens_arg) :
 {}
 
 
-TokenType Parser::get_type(const std::string& arg) {
+msj_TokenType Parser::get_type(const std::string& arg) {
     std::string lower_arg = arg;
     std::for_each(lower_arg.begin(),
                   lower_arg.end(),
@@ -42,46 +42,46 @@ TokenType Parser::get_type(const std::string& arg) {
                   });
 
     if (lower_arg == "and")
-        return TokenType::op_and;
+        return msj_TokenType::op_and;
 
     if (lower_arg == "or")
-        return TokenType::op_or;
+        return msj_TokenType::op_or;
 
     if (lower_arg == "(")
-        return TokenType::open_paren;
+        return msj_TokenType::open_paren;
 
     if (lower_arg == ")")
-        return TokenType::close_paren;
+        return msj_TokenType::close_paren;
 
     if (lower_arg == ">" || lower_arg == ".gt.")
-        return TokenType::op_gt;
+        return msj_TokenType::op_gt;
 
     if (lower_arg == ">=" || lower_arg == ".ge.")
-        return TokenType::op_ge;
+        return msj_TokenType::op_ge;
 
     if (lower_arg == "<=" || lower_arg == ".le.")
-        return TokenType::op_le;
+        return msj_TokenType::op_le;
 
     if (lower_arg == "<" || lower_arg == ".lt.")
-        return TokenType::op_lt;
+        return msj_TokenType::op_lt;
 
     if (lower_arg == "<=" || lower_arg == ".le.")
-        return TokenType::op_le;
+        return msj_TokenType::op_le;
 
     if (lower_arg == "=" || lower_arg == ".eq.")
-        return TokenType::op_eq;
+        return msj_TokenType::op_eq;
 
     if (lower_arg == "!=" || lower_arg == ".ne.")
-        return TokenType::op_ne;
+        return msj_TokenType::op_ne;
 
     {
         char * end_ptr;
         std::strtod(lower_arg.c_str(), &end_ptr);
         if (std::strlen(end_ptr) == 0)
-            return TokenType::number;
+            return msj_TokenType::number;
     }
 
-    return TokenType::ecl_expr;
+    return msj_TokenType::ecl_expr;
 }
 
 FuncType Parser::get_func(const std::string& arg) {
@@ -108,7 +108,7 @@ FuncType Parser::get_func(const std::string& arg) {
 ParseNode Parser::next() {
     this->current_pos++;
     if (static_cast<size_t>(this->current_pos) == this->tokens.size())
-        return TokenType::end;
+        return msj_TokenType::end;
 
     std::string arg = this->tokens[this->current_pos];
     return ParseNode(get_type(arg), arg);
@@ -117,7 +117,7 @@ ParseNode Parser::next() {
 
 ParseNode Parser::current() const {
     if (static_cast<size_t>(this->current_pos) == this->tokens.size())
-        return TokenType::end;
+        return msj_TokenType::end;
 
     std::string arg = this->tokens[this->current_pos];
     return ParseNode(get_type(arg), arg);
@@ -126,56 +126,56 @@ ParseNode Parser::current() const {
 
 Action::ASTNode Parser::parse_left() {
     auto current = this->current();
-    if (current.type != TokenType::ecl_expr)
-        return TokenType::error;
+    if (current.type != msj_TokenType::ecl_expr)
+        return msj_TokenType::error;
 
     std::string func = current.value;
     FuncType func_type = get_func(current.value);
     std::vector<std::string> arg_list;
     current = this->next();
-    while (current.type == TokenType::ecl_expr || current.type == TokenType::number) {
+    while (current.type == msj_TokenType::ecl_expr || current.type == msj_TokenType::number) {
         arg_list.push_back(current.value);
         current = this->next();
     }
 
-    return Action::ASTNode(TokenType::ecl_expr, func_type, func, arg_list);
+    return Action::ASTNode(msj_TokenType::ecl_expr, func_type, func, arg_list);
 }
 
 Action::ASTNode Parser::parse_op() {
     auto current = this->current();
-    if (current.type == TokenType::op_gt ||
-        current.type == TokenType::op_ge ||
-        current.type == TokenType::op_lt ||
-        current.type == TokenType::op_le ||
-        current.type == TokenType::op_eq ||
-        current.type == TokenType::op_ne) {
+    if (current.type == msj_TokenType::op_gt ||
+        current.type == msj_TokenType::op_ge ||
+        current.type == msj_TokenType::op_lt ||
+        current.type == msj_TokenType::op_le ||
+        current.type == msj_TokenType::op_eq ||
+        current.type == msj_TokenType::op_ne) {
         this->next();
         return current.type;
     }
-    return TokenType::error;
+    return msj_TokenType::error;
 }
 
 
 Action::ASTNode Parser::parse_right() {
     auto current = this->current();
-    if (current.type == TokenType::number) {
+    if (current.type == msj_TokenType::number) {
         this->next();
         return Action::ASTNode( strtod(current.value.c_str(), nullptr) );
     }
 
     current = this->current();
-    if (current.type != TokenType::ecl_expr)
-        return TokenType::error;
+    if (current.type != msj_TokenType::ecl_expr)
+        return msj_TokenType::error;
 
     std::string func = current.value;
     FuncType func_type = FuncType::none;
     std::vector<std::string> arg_list;
     current = this->next();
-    while (current.type == TokenType::ecl_expr || current.type == TokenType::number) {
+    while (current.type == msj_TokenType::ecl_expr || current.type == msj_TokenType::number) {
         arg_list.push_back(current.value);
         current = this->next();
     }
-    return Action::ASTNode(TokenType::ecl_expr, func_type, func, arg_list);
+    return Action::ASTNode(msj_TokenType::ecl_expr, func_type, func, arg_list);
 }
 
 
@@ -183,28 +183,28 @@ Action::ASTNode Parser::parse_right() {
 Action::ASTNode Parser::parse_cmp() {
     auto current = this->current();
 
-    if (current.type == TokenType::open_paren) {
+    if (current.type == msj_TokenType::open_paren) {
         this->next();
         auto inner_expr = this->parse_or();
 
         current = this->current();
-        if (current.type != TokenType::close_paren)
-            return TokenType::error;
+        if (current.type != msj_TokenType::close_paren)
+            return msj_TokenType::error;
 
         this->next();
         return inner_expr;
     } else {
         auto left_node = this->parse_left();
-        if (left_node.type == TokenType::error)
-            return TokenType::error;
+        if (left_node.type == msj_TokenType::error)
+            return msj_TokenType::error;
 
         auto op_node = this->parse_op();
-        if (op_node.type == TokenType::error)
-            return TokenType::error;
+        if (op_node.type == msj_TokenType::error)
+            return msj_TokenType::error;
 
         auto right_node = this->parse_right();
-        if (right_node.type == TokenType::error)
-            return TokenType::error;
+        if (right_node.type == msj_TokenType::error)
+            return msj_TokenType::error;
 
         op_node.add_child(left_node);
         op_node.add_child(right_node);
@@ -214,19 +214,19 @@ Action::ASTNode Parser::parse_cmp() {
 
 Action::ASTNode Parser::parse_and() {
     auto left = this->parse_cmp();
-    if (left.type == TokenType::error)
-        return TokenType::error;
+    if (left.type == msj_TokenType::error)
+        return msj_TokenType::error;
 
     auto current = this->current();
-    if (current.type == TokenType::op_and) {
-        Action::ASTNode and_node(TokenType::op_and);
+    if (current.type == msj_TokenType::op_and) {
+        Action::ASTNode and_node(msj_TokenType::op_and);
         and_node.add_child(left);
 
-        while (this->current().type == TokenType::op_and) {
+        while (this->current().type == msj_TokenType::op_and) {
             this->next();
             auto next_cmp = this->parse_cmp();
-            if (next_cmp.type == TokenType::error)
-                return TokenType::error;
+            if (next_cmp.type == msj_TokenType::error)
+                return msj_TokenType::error;
 
             and_node.add_child(next_cmp);
         }
@@ -239,19 +239,19 @@ Action::ASTNode Parser::parse_and() {
 
 Action::ASTNode Parser::parse_or() {
     auto left = this->parse_and();
-    if (left.type == TokenType::error)
-        return TokenType::error;
+    if (left.type == msj_TokenType::error)
+        return msj_TokenType::error;
 
     auto current = this->current();
-    if (current.type == TokenType::op_or) {
-        Action::ASTNode or_node(TokenType::op_or);
+    if (current.type == msj_TokenType::op_or) {
+        Action::ASTNode or_node(msj_TokenType::op_or);
         or_node.add_child(left);
 
-        while (this->current().type == TokenType::op_or) {
+        while (this->current().type == msj_TokenType::op_or) {
             this->next();
             auto next_cmp = this->parse_or();
-            if (next_cmp.type == TokenType::error)
-                return TokenType::error;
+            if (next_cmp.type == msj_TokenType::error)
+                return msj_TokenType::error;
 
             or_node.add_child(next_cmp);
         }
@@ -268,12 +268,12 @@ Action::ASTNode Parser::parse(const std::vector<std::string>& tokens) {
 
     auto tree = parser.parse_or();
     auto current = parser.current();
-    if (current.type != TokenType::end) {
+    if (current.type != msj_TokenType::end) {
         size_t index = parser.current_pos;
         throw std::invalid_argument("Extra unhandled data starting with token[" + std::to_string(index) + "] = " + current.value);
     }
 
-    if (tree.type == TokenType::error)
+    if (tree.type == msj_TokenType::error)
         throw std::invalid_argument("Failed to parse");
 
     return tree;

@@ -3,7 +3,7 @@
 
 #include <opm/parser/eclipse/EclipseState/Schedule/Action/ActionResult.hpp>
 
-enum TokenType {
+enum msj_TokenType {
   number,        //  0
   ecl_expr,      //  1
   open_paren,    //  2
@@ -44,12 +44,12 @@ public:
     explicit Value(double value);
     Value() = default;
 
-    Result eval_cmp(TokenType op, const Value& rhs) const;
+    Result eval_cmp(msj_TokenType op, const Value& rhs) const;
     void add_well(const std::string& well, double value);
     double scalar() const;
 
 private:
-    Action::Result eval_cmp_wells(TokenType op, double rhs) const;
+    Action::Result eval_cmp_wells(msj_TokenType op, double rhs) const;
 
     double scalar_value;
     double is_scalar = false;

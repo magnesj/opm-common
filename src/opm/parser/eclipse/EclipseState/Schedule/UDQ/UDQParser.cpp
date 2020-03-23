@@ -307,7 +307,7 @@ UDQASTNode UDQParser::parse(const UDQParams& udq_params, UDQVarType target_type,
     if (!static_type_check(target_type, tree.var_type)) {
         std::string msg = "Invalid compile-time type conversion detected in UDQ expression target type: " + UDQ::typeName(target_type) + " expr type: " + UDQ::typeName(tree.var_type);
         parseContext.handleError(ParseContext::UDQ_TYPE_ERROR, msg, errors);
-        if (parseContext.get(ParseContext::UDQ_TYPE_ERROR) != InputError::IGNORE)
+        if (parseContext.get(ParseContext::UDQ_TYPE_ERROR) != InputError::msj_IGNORE)
             dump_tokens(target_var, tokens);
 
         return UDQASTNode( udq_params.undefinedValue() );
@@ -316,7 +316,7 @@ UDQASTNode UDQParser::parse(const UDQParams& udq_params, UDQVarType target_type,
     if (tree.var_type == UDQVarType::NONE) {
         std::string msg = "Parse error when evaluating UDQ define expression - could not determine expression type";
         parseContext.handleError(ParseContext::UDQ_TYPE_ERROR, msg, errors);
-        if (parseContext.get(ParseContext::UDQ_TYPE_ERROR) != InputError::IGNORE)
+        if (parseContext.get(ParseContext::UDQ_TYPE_ERROR) != InputError::msj_IGNORE)
             dump_tokens(target_var, tokens);
 
         return UDQASTNode( udq_params.undefinedValue() );

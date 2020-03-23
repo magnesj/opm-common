@@ -69,6 +69,7 @@
 #include <vector>
 
 #include <boost/range.hpp>
+#include <numeric>
 
 namespace VI = ::Opm::RestartIO::Helpers::VectorItems;
 

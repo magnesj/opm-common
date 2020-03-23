@@ -29,6 +29,7 @@
 #else
 #include <fnmatch.h>
 #endif
+#include <stdexcept>
 
 namespace {
     std::string strip_quotes(const std::string& s) {
@@ -52,22 +53,22 @@ namespace Opm {
 namespace Action {
 
 ASTNode::ASTNode() :
-    type(TokenType::error)
+    type(msj_TokenType::error)
 {}
 
 
-ASTNode::ASTNode(TokenType type_arg):
+ASTNode::ASTNode(msj_TokenType type_arg):
     type(type_arg)
 {}
 
 
 ASTNode::ASTNode(double value) :
-    type(TokenType::number),
+    type(msj_TokenType::number),
     number(value)
 {}
 
 
-ASTNode::ASTNode(TokenType type_arg, FuncType func_type_arg, const std::string& func_arg, const std::vector<std::string>& arg_list_arg):
+ASTNode::ASTNode(msj_TokenType type_arg, FuncType func_type_arg, const std::string& func_arg, const std::vector<std::string>& arg_list_arg):
     type(type_arg),
     func_type(func_type_arg),
     func(func_arg),
@@ -101,7 +102,7 @@ Action::Value ASTNode::value(const Action::Context& context) const {
     if (this->children.size() != 0)
         throw std::invalid_argument("value() method should only reach leafnodes");
 
-    if (this->type == TokenType::number)
+    if (this->type == msj_TokenType::number)
         return Action::Value(this->number);
 
     if (this->arg_list.size() == 0)
@@ -136,10 +137,10 @@ Action::Result ASTNode::eval(const Action::Context& context) const {
     if (this->children.size() == 0)
         throw std::invalid_argument("ASTNode::eval() should not reach leafnodes");
 
-    if (this->type == TokenType::op_or || this->type == TokenType::op_and) {
-        Action::Result result(this->type == TokenType::op_and);
+    if (this->type == msj_TokenType::op_or || this->type == msj_TokenType::op_and) {
+        Action::Result result(this->type == msj_TokenType::op_and);
         for (const auto& child : this->children) {
-            if (this->type == TokenType::op_or)
+            if (this->type == msj_TokenType::op_or)
                 result |= child.eval(context);
             else
                 result &= child.eval(context);

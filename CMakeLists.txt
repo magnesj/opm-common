@@ -115,8 +115,8 @@ macro (sources_hook)
         list(INSERT opm-common_SOURCES 0 ${PROJECT_BINARY_DIR}/ParserKeywords/${name}.cpp)
     endforeach()
   endif()
-  set_source_files_properties(src/opm/parser/eclipse/Python/Python.cpp
-                              PROPERTIES COMPILE_FLAGS -Wno-shadow)
+  #set_source_files_properties(src/opm/parser/eclipse/Python/Python.cpp
+                              #PROPERTIES COMPILE_FLAGS -Wno-shadow)
 endmacro (sources_hook)
 
 macro (fortran_hook)

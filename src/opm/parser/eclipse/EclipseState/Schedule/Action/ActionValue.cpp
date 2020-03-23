@@ -8,37 +8,37 @@ namespace Action {
 namespace {
 
 #if 0
-inline std::string tokenString(TokenType op) {
+inline std::string tokenString(msj_TokenType op) {
     switch (op) {
 
-    case TokenType::op_eq:
+    case msj_TokenType::op_eq:
         return "==";
 
-    case TokenType::op_ge:
+    case msj_TokenType::op_ge:
         return ">=";
 
-    case TokenType::op_le:
+    case msj_TokenType::op_le:
         return "<=";
 
-    case TokenType::op_ne:
+    case msj_TokenType::op_ne:
         return "!=";
 
-    case TokenType::op_gt:
+    case msj_TokenType::op_gt:
         return ">";
 
-    case TokenType::op_lt:
+    case msj_TokenType::op_lt:
         return "<";
 
-    case TokenType::op_or:
+    case msj_TokenType::op_or:
         return "OR";
 
-    case TokenType::op_and:
+    case msj_TokenType::op_and:
         return "AND";
 
-    case TokenType::open_paren:
+    case msj_TokenType::open_paren:
         return "(";
 
-    case TokenType::close_paren:
+    case msj_TokenType::close_paren:
         return ")";
 
     default:
@@ -47,25 +47,25 @@ inline std::string tokenString(TokenType op) {
 }
 #endif
 
-bool eval_cmp_scalar(double lhs, TokenType op, double rhs) {
+bool eval_cmp_scalar(double lhs, msj_TokenType op, double rhs) {
     switch (op) {
 
-    case TokenType::op_eq:
+    case msj_TokenType::op_eq:
         return lhs == rhs;
 
-    case TokenType::op_ge:
+    case msj_TokenType::op_ge:
         return lhs >= rhs;
 
-    case TokenType::op_le:
+    case msj_TokenType::op_le:
         return lhs <= rhs;
 
-    case TokenType::op_ne:
+    case msj_TokenType::op_ne:
         return lhs != rhs;
 
-    case TokenType::op_gt:
+    case msj_TokenType::op_gt:
         return lhs > rhs;
 
-    case TokenType::op_lt:
+    case msj_TokenType::op_lt:
         return lhs < rhs;
 
     default:
@@ -98,7 +98,7 @@ void Value::add_well(const std::string& well, double value) {
 }
 
 
-Result Value::eval_cmp_wells(TokenType op, double rhs) const {
+Result Value::eval_cmp_wells(msj_TokenType op, double rhs) const {
     std::vector<std::string> wells;
     bool result = false;
 
@@ -115,15 +115,15 @@ Result Value::eval_cmp_wells(TokenType op, double rhs) const {
 }
 
 
-Result Value::eval_cmp(TokenType op, const Value& rhs) const {
-    if (op == TokenType::number ||
-        op == TokenType::ecl_expr ||
-        op == TokenType::open_paren ||
-        op == TokenType::close_paren ||
-        op == TokenType::op_and ||
-        op == TokenType::op_or ||
-        op == TokenType::end ||
-        op == TokenType::error)
+Result Value::eval_cmp(msj_TokenType op, const Value& rhs) const {
+    if (op == msj_TokenType::number ||
+        op == msj_TokenType::ecl_expr ||
+        op == msj_TokenType::open_paren ||
+        op == msj_TokenType::close_paren ||
+        op == msj_TokenType::op_and ||
+        op == msj_TokenType::op_or ||
+        op == msj_TokenType::end ||
+        op == msj_TokenType::error)
         throw std::invalid_argument("Invalid operator");
 
     if (!rhs.is_scalar)

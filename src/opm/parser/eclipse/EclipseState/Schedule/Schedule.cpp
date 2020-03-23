@@ -80,9 +80,12 @@
 //#include <windows.h>
 #include <shlwapi.h>
 #define fnmatch(a, b, c) PathMatchSpecA(a, b)
+#undef max
+#undef min
 #else
 #include <fnmatch.h>
 #endif
+
 
 
 namespace Opm {

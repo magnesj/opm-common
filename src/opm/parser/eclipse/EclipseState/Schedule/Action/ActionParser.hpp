@@ -36,17 +36,17 @@ namespace Opm {
 namespace Action {
 
 struct ParseNode {
-    ParseNode(TokenType type_arg, const std::string& value_arg) :
+    ParseNode(msj_TokenType type_arg, const std::string& value_arg) :
         type(type_arg),
         value(value_arg)
     {}
 
     // Implicit converting constructor.
-    ParseNode(TokenType type_arg) : ParseNode(type_arg, "")
+    ParseNode(msj_TokenType type_arg) : ParseNode(type_arg, "")
     {}
 
 
-    TokenType type;
+    msj_TokenType type;
     std::string value;
 };
 
@@ -55,7 +55,7 @@ struct ParseNode {
 class Parser {
 public:
     static Action::ASTNode parse(const std::vector<std::string>& tokens);
-    static TokenType get_type(const std::string& arg);
+    static msj_TokenType get_type(const std::string& arg);
     static FuncType get_func(const std::string& arg);
 
 private:

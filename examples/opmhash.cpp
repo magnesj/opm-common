@@ -56,7 +56,7 @@ std::vector<keyword> load_deck(const char * deck_file) {
     std::vector<keyword> keywords;
 
     /* Use the same default ParseContext as flow. */
-    parseContext.update(Opm::ParseContext::PARSE_RANDOM_SLASH, Opm::InputError::IGNORE);
+    parseContext.update(Opm::ParseContext::PARSE_RANDOM_SLASH, Opm::InputError::msj_IGNORE);
     parseContext.update(Opm::ParseContext::PARSE_MISSING_DIMS_KEYWORD, Opm::InputError::WARN);
     parseContext.update(Opm::ParseContext::SUMMARY_UNKNOWN_WELL, Opm::InputError::WARN);
     parseContext.update(Opm::ParseContext::SUMMARY_UNKNOWN_GROUP, Opm::InputError::WARN);
