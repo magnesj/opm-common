@@ -19,6 +19,8 @@
 #ifndef OPM_FILESYSTEM_HPP
 #define OPM_FILESYSTEM_HPP
 
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+
 #if __cplusplus < 201703L || \
     (defined(__GNUC__) && __GNUC__ < 8)
 #include <experimental/filesystem>

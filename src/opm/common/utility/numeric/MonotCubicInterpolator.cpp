@@ -41,6 +41,7 @@
 #include <vector>
 #include <map>
 #include <cmath>
+#include <algorithm>
 
 using namespace std;
 
@@ -149,7 +150,7 @@ read(const std::string & datafilename, int xColumn, int fColumn)
             columnindex++;
         }
     }
-    if (columnindex >= (max(xColumn, fColumn))) {
+    if (columnindex >= (std::max(xColumn, fColumn))) {
       data[value[xColumn-1]] =  value[fColumn-1] ;
     }
   }

@@ -1,4 +1,5 @@
 #include <opm/parser/eclipse/EclipseState/Schedule/Action/ActionValue.hpp>
+#include <stdexcept>
 
 
 namespace Opm {

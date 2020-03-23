@@ -16,10 +16,18 @@
   You should have received a copy of the GNU General Public License
   along with OPM.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <fnmatch.h>
+
 #include <algorithm>
 
 #include <opm/parser/eclipse/EclipseState/Schedule/UDQ/UDQSet.hpp>
+
+#ifdef _WIN32
+//#include <windows.h>
+#include <shlwapi.h>
+#define fnmatch(a, b, c) PathMatchSpecA(a, b)
+#else
+#include <fnmatch.h>
+#endif
 
 namespace Opm {
 

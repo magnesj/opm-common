@@ -28,7 +28,13 @@
 #include <opm/parser/eclipse/EclipseState/Schedule/Well/WellInjectionProperties.hpp>
 #include <opm/parser/eclipse/EclipseState/Schedule/Well/WellProductionProperties.hpp>
 
+#ifdef _WIN32
+//#include <windows.h>
+#include <shlwapi.h>
+#define fnmatch(a, b, c) PathMatchSpecA(a, b)
+#else
 #include <fnmatch.h>
+#endif
 #include <cmath>
 #include <ostream>
 

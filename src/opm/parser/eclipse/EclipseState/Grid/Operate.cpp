@@ -20,6 +20,7 @@
 #include <string>
 
 #include "Operate.hpp"
+#include <algorithm>
 
 namespace Opm {
 namespace Operate {

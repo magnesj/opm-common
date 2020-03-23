@@ -17,7 +17,6 @@
   along with OPM.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <fnmatch.h>
 
 #include <stdexcept>
 
@@ -25,6 +24,14 @@
 #include <opm/parser/eclipse/EclipseState/Schedule/Well/Well.hpp>
 
 #include "injection.hpp"
+
+#ifdef _WIN32
+//#include <windows.h>
+#include <shlwapi.h>
+#define fnmatch(a, b, c) PathMatchSpecA(a, b)
+#else
+#include <fnmatch.h>
+#endif
 
 namespace Opm {
 namespace injection {

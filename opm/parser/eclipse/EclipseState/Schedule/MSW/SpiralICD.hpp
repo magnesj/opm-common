@@ -26,6 +26,7 @@
 #include <vector>
 
 #include <opm/parser/eclipse/EclipseState/Schedule/MSW/icd.hpp>
+#include <string>
 
 namespace Opm {
 

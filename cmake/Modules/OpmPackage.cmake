@@ -200,7 +200,7 @@ macro (find_package_deps module)
   config_cmd_line (${module}_CMD_CONFIG ${module}_CONFIG_VARS)
 
   # This variable is used by UseDuneVer
-  list(GET ${module}_INCLUDE_DIRS 0 ${module}_INCLUDE_DIR)
+  #list(GET ${module}_INCLUDE_DIRS 0 ${module}_INCLUDE_DIR)
   # print everything out if we're asked to
   if (${module}_DEBUG)
 	debug_find_vars (${module})

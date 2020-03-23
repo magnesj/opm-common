@@ -21,6 +21,7 @@
 #include <iomanip>
 
 #include <opm/parser/eclipse/Parser/ErrorGuard.hpp>
+#include <algorithm>
 
 
 namespace Opm {
