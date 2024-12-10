@@ -219,7 +219,7 @@ void FileDeck::Block::dump(DeckOutput& out) const {
 
 
 FileDeck::FileDeck::Block::Block(const std::string& filename)
-    : fname(fs::canonical(filename))
+    : fname(fs::canonical(filename).generic_string())
 {}
 
 std::optional<FileDeck::Index> FileDeck::find(const std::string& keyword, const Index& offset) const {
