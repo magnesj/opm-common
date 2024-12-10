@@ -1747,8 +1747,8 @@ template<> std::vector<std::array<T, 9>> BOFS<T>::diffusionCoefficients_; \
 template<> bool BOFS<T>::isInitialized_; \
 template<> bool BOFS<T>::useSaturatedTables_;
 
-DECLARE_INSTANCE(float)
-DECLARE_INSTANCE(double)
+//DECLARE_INSTANCE(float)
+//DECLARE_INSTANCE(double)
 
 #undef DECLARE_INSTANCE
 
