@@ -46,13 +46,13 @@ namespace cvf {
 
 // User actions (interactive responses)
 #if 0
-static const int USERACTION_CONTINUE    = 0;
 #endif
 #ifdef WIN32
+static const int USERACTION_CONTINUE    = 0;
 static const int USERACTION_DEBUGBREAK  = 1;
+static const int USERACTION_ABORT       = 2;
 #endif
 #if 0
-static const int USERACTION_ABORT       = 2;
 #endif
 
 
