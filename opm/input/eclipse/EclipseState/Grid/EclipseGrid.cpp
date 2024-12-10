@@ -1549,7 +1549,7 @@ std::vector<double> EclipseGrid::createDVector(const std::array<int,3>& dims, st
             std::vector<double> volume(this->m_nactive);
 
             #pragma omp parallel for schedule(static)
-            for (std::size_t active_index = 0; active_index < this->m_active_to_global.size(); active_index++) {
+            for (int active_index = 0; active_index < this->m_active_to_global.size(); active_index++) {
                 std::array<double,8> X;
                 std::array<double,8> Y;
                 std::array<double,8> Z;
@@ -1860,7 +1860,6 @@ std::vector<double> EclipseGrid::createDVector(const std::array<int,3>& dims, st
     void EclipseGrid::save(const std::string& filename, bool formatted, const std::vector<Opm::NNCdata>& nnc, const Opm::UnitSystem& units) const {
 
         Opm::UnitSystem::UnitType unitSystemType = units.getType();
-        constexpr auto length = ::Opm::UnitSystem::measure::length;
 
         const std::array<int, 3> dims = getNXYZ();
 
@@ -1870,7 +1869,10 @@ std::vector<double> EclipseGrid::createDVector(const std::array<int,3>& dims, st
         std::vector<float> coord_f;
         coord_f.resize(m_coord.size());
 
-        auto convert_length = [&units](const double x) { return static_cast<float>(units.from_si(length, x)); };
+        auto convert_length = [&units](const double x) { 
+            constexpr auto length = ::Opm::UnitSystem::measure::length;
+            return static_cast<float>(units.from_si(length, x)); 
+        };
 
         if (m_input_coord.has_value()) {
             std::transform(m_input_coord.value().begin(), m_input_coord.value().end(), coord_f.begin(), convert_length);
