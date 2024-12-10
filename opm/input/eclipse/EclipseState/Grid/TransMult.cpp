@@ -179,7 +179,7 @@ namespace Opm {
                 solution.insert(name, UnitSystem::measure::identity, pair->second, data::TargetType::INIT);
             } else {
                 // defaulted MULT?- are only written if requested
-                if(include_all_multminus or name.size() < 6)
+                if(include_all_multminus || name.size() < 6)
                     solution.insert(name, UnitSystem::measure::identity, std::vector<double>(size, 1.), data::TargetType::INIT);
             }
         }
