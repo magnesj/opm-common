@@ -371,7 +371,7 @@ inline std::string clean( const std::vector<std::pair<std::string, std::string>>
                     if (end_pos == std::string::npos) {
                         std::copy(input.begin(), input.end(), dsti);
                         dsti += std::distance( input.begin(), input.end() );
-                        input = std::string_view(input.end(), 0);
+                        input = std::string_view();
                         break;
                     } else {
                         end_pos += end_string.size();
@@ -625,7 +625,7 @@ void ParserState::loadFile(const std::filesystem::path& inputFile) {
 
     const auto closer = []( std::FILE* f ) { std::fclose( f ); };
     std::unique_ptr< std::FILE, decltype( closer ) > ufp(
-            std::fopen( inputFile.c_str(), "rb" ),
+            std::fopen( inputFile.generic_string().c_str(), "rb" ),
             closer
             );
 
@@ -666,7 +666,7 @@ void ParserState::handleRandomText(const std::string_view& keywordString ) const
     std::string errorKey;
     std::string trimmedCopy = std::string( keywordString );
     std::string msg;
-    KeywordLocation location{lastKeyWord, this->current_path(), this->line()};
+    KeywordLocation location{lastKeyWord, this->current_path().generic_string(), this->line()};
 
     if (trimmedCopy == "/") {
         errorKey = ParseContext::PARSE_RANDOM_SLASH;
@@ -754,7 +754,7 @@ newRawKeyword(const ParserKeyword& parserKeyword,
                 .handleError(
                     ParseContext::PARSE_INVALID_KEYWORD_COMBINATION,
                     fmt::format("Incompatible keyword combination: {} declared when {} is already present.", keywordString, keyword),
-                    KeywordLocation { keywordString, parserState.current_path(), parserState.line() } ,
+                    KeywordLocation { keywordString, parserState.current_path().generic_string(), parserState.line() } ,
                     parserState.errors
                 );
         }
@@ -767,7 +767,7 @@ newRawKeyword(const ParserKeyword& parserKeyword,
                 .handleError(
                     ParseContext::PARSE_INVALID_KEYWORD_COMBINATION,
                     fmt::format("Incompatible keyword combination: {} declared, but {} is missing.", keywordString, keyword),
-                    KeywordLocation { keywordString, parserState.current_path(), parserState.line() } ,
+                    KeywordLocation { keywordString, parserState.current_path().generic_string(), parserState.line() } ,
                     parserState.errors
                 );
         }
@@ -1390,7 +1390,8 @@ bool parseState( ParserState& parserState, const Parser& parser ) {
 
             if (includeFile.has_value()) {
                 auto& deck_tree = parserState.deck.tree();
-                deck_tree.add_include(std::filesystem::absolute(parserState.current_path()), includeFile.value() );
+                deck_tree.add_include(std::filesystem::absolute(parserState.current_path()).generic_string(),
+                                      includeFile.value().generic_string());
                 parserState.loadFile( includeFile.value() );
             }
             continue;
@@ -1568,7 +1569,7 @@ bool parseState( ParserState& parserState, const Parser& parser ) {
         if (dataFileName[0] == '/')
             data_file = std::filesystem::canonical(dataFileName).string();
         else
-            data_file = std::filesystem::proximate( std::filesystem::canonical(dataFileName) );
+            data_file = std::filesystem::proximate(std::filesystem::canonical(dataFileName)).generic_string();
 
         ParserState parserState( this->codeKeywords(), parseContext, errors, data_file, ignore_sections);
         parseState( parserState, *this );
