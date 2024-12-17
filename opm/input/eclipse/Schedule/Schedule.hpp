@@ -260,10 +260,9 @@ namespace Opm {
         void open_well(const std::string& well_name, std::size_t report_step);
         void open_well(const std::string& well_name);
         void clear_event(ScheduleEvents::Events, std::size_t report_step);
+        void add_event(ScheduleEvents::Events, std::size_t report_step);
         void applyWellProdIndexScaling(const std::string& well_name, const std::size_t reportStep, const double scalingFactor);
 
-        std::vector<const Group*> getChildGroups2(const std::string& group_name, std::size_t timeStep) const;
-        std::vector<Well> getChildWells2(const std::string& group_name, std::size_t timeStep) const;
         WellProducerCMode getGlobalWhistctlMmode(std::size_t timestep) const;
 
         const UDQConfig& getUDQConfig(std::size_t timeStep) const;

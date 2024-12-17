@@ -947,6 +947,13 @@ void Schedule::iterateScheduleSection(std::size_t load_start, std::size_t load_e
         this->snapshots[report_step].update_events(events);
     }
 
+    void Schedule::add_event(ScheduleEvents::Events event, std::size_t report_step)
+    {
+        auto events = this->snapshots[report_step].events();
+        events.addEvent(event);
+        this->snapshots[report_step].update_events(events);
+    }
+
 
     bool Schedule::updateWPAVE(const std::string& wname, std::size_t report_step, const PAvg& pavg) {
         const auto& well = this->getWell(wname, report_step);
@@ -1099,7 +1106,8 @@ void Schedule::iterateScheduleSection(std::size_t load_start, std::size_t load_e
                   allowCrossFlow,
                   automaticShutIn,
                   pvt_table,
-                  gas_inflow);
+                  gas_inflow,
+                  this->m_static.m_runspec.temp());
 
         this->addWell( std::move(well) );
 
@@ -1127,45 +1135,6 @@ void Schedule::iterateScheduleSection(std::size_t load_start, std::size_t load_e
 
     bool Schedule::hasGroup(const std::string& groupName, std::size_t timeStep) const {
         return this->snapshots[timeStep].groups.has(groupName);
-    }
-
-    std::vector< const Group* > Schedule::getChildGroups2(const std::string& group_name,
-                                                          std::size_t timeStep) const
-    {
-        const auto& sched_state = this->snapshots[timeStep];
-        const auto& group = sched_state.groups.get(group_name);
-
-        std::vector<const Group*> child_groups;
-        std::transform(group.groups().begin(), group.groups().end(),
-                       std::back_inserter(child_groups),
-                       [this, timeStep](const auto& child_name)
-                       {
-                           return std::addressof(this->getGroup(child_name, timeStep));
-                       });
-
-        return child_groups;
-    }
-
-    std::vector< Well > Schedule::getChildWells2(const std::string& group_name, std::size_t timeStep) const {
-        const auto& sched_state = this->snapshots[timeStep];
-        const auto& group = sched_state.groups.get(group_name);
-
-        std::vector<Well> wells;
-
-        if (group.groups().size()) {
-            for (const auto& child_name : group.groups()) {
-                const auto& child_wells = this->getChildWells2(child_name, timeStep);
-                wells.insert(wells.end(), child_wells.begin(), child_wells.end());
-            }
-        } else {
-            std::transform(group.wells().begin(), group.wells().end(),
-                           std::back_inserter(wells),
-                           [this, timeStep](const auto& well_name) -> decltype(auto)
-                           {
-                               return this->getWell(well_name, timeStep);
-                           });
-        }
-        return wells;
     }
 
     /*
@@ -1569,8 +1538,7 @@ File {} line {}.)", pattern, location.keyword, location.filename, location.linen
             const auto& well = this->getWell(wname, timeStep);
             const auto& connections = well.getConnections();
             if (connections.allConnectionsShut() && well.getStatus() != Well::Status::SHUT) {
-                auto elapsed = this->snapshots[timeStep].start_time() - this->snapshots[0].start_time();
-                auto days = std::chrono::duration_cast<std::chrono::hours>(elapsed).count() / 24.0;
+                auto days = unit::convert::to(seconds(timeStep), unit::day);
                 auto msg = fmt::format("All completions in well {} is shut at {} days\n"
                                        "The well is therefore also shut", well.name(), days);
                 OpmLog::note(msg);
@@ -1614,7 +1582,8 @@ File {} line {}.)", pattern, location.keyword, location.filename, location.linen
             throw std::logic_error(fmt::format("seconds({}) - invalid timeStep. Valid range [0,{}>", timeStep, this->snapshots.size()));
 
         auto elapsed = this->snapshots[timeStep].start_time() - this->snapshots[0].start_time();
-        return std::chrono::duration_cast<std::chrono::seconds>(elapsed).count();
+        using DurationInSeconds = std::chrono::duration<double>; // Tick is 1 second, stored in double.
+        return DurationInSeconds(elapsed).count();
     }
 
     std::time_t Schedule::simTime(std::size_t timeStep) const {
@@ -1634,7 +1603,8 @@ File {} line {}.)", pattern, location.keyword, location.filename, location.linen
                                 fmt::gmtime(TimeService::to_time_t(start_time)),
                                 fmt::gmtime(TimeService::to_time_t(end_time))) };
         }
-        return std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time).count();
+        using DurationInSeconds = std::chrono::duration<double>; // Tick is 1 second, stored in double.
+        return DurationInSeconds(end_time - start_time).count();
     }
 
     void Schedule::applyKeywords(std::vector<std::unique_ptr<DeckKeyword>>& keywords)
@@ -2643,6 +2613,7 @@ void Schedule::create_first(const time_point& start_time, const std::optional<ti
     sched_state.rptonly(this->m_static.rptonly);
     sched_state.bhp_defaults.update( ScheduleState::BHPDefaults() );
     sched_state.source.update( Source() );
+    sched_state.wcycle.update( WCYCLE() );
     //sched_state.update_date( start_time );
     this->addGroup("FIELD", 0);
 }

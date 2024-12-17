@@ -67,7 +67,7 @@ private:
     Action::ASTNode parse_or();
 
     const std::vector<std::string>& tokens;
-    ssize_t current_pos = -1;
+    size_t current_pos = std::numeric_limits<size_t>::max();
 };
 
 }} // namespace Opm::Action
